@@ -1,0 +1,122 @@
+'''
+Megan Hanna
+Brief description of the code for other programmers
+I certify that this code is mine, and mine alone, in accordance with GVSU academic honesty policy.
+10/20/2023
+
+'''
+
+import random
+
+
+def roll_dice():
+    one = random.randint(1, 6)
+    two = random.randint(1, 6)
+    return one, two
+
+
+def computer_turn(game_score, goal):
+    turn_total = 0
+    turn_over = False
+    while not turn_over:
+        one, two = roll_dice()
+        turn_total = turn_total + (one + two)
+        if one == 1 and two == 1:
+            game_score = 0
+            turn_total = 0
+            turn_over = True
+        elif one == 1 or two == 1:
+            turn_total = 0
+            turn_over = True
+        elif turn_total >= goal:
+            turn_over = True
+        print(f'Computer rolled: {one},{two} Turn total: {turn_total}')
+    game_score = game_score + turn_total
+    return game_score
+
+
+def human_turn(game_score):
+    one, two = roll_dice()
+    turn_total = 0
+    roll_over = False
+    while not roll_over and game_score < 100:
+        if one == 1 or two == 1:
+            roll_over = True
+        elif game_score > 100:
+            roll_over = False
+        elif roll_over == 'y':
+            game_score += turn_total
+            roll_over = True
+        else:
+            roll_over = False
+        turn_total += (one + two)
+        print(f'You rolled {one},{two} Turn total: {turn_total}')
+        roll_again = input('Roll again (y/n): ')
+        if roll_again == 'y':
+            roll_over = False
+            one, two = roll_dice()
+        else:
+            roll_over = True
+        game_score += turn_total
+    return game_score
+
+
+
+def human_vs_computer():
+    human_score = 0
+    computer_score = 0
+    game_over = False
+    while game_over == False:
+        while human_score < 100 and computer_score < 100:
+            print(f'You: {human_score} Computer: {computer_score}')
+            human_score = human_turn(human_score)
+            computer_score = computer_turn(computer_score, 20)
+            if (human_score or computer_score) >= 100:
+                game_over = True
+                print(f'You: {human_score} Computer: {computer_score}')
+                print('Congradulations!')
+            else:
+                game_over = False
+
+
+
+def computer_solo(goal):
+    turns = 0
+    score = 0
+    while score < 100:
+        score = computer_turn(score, goal)
+        turns += 1
+        print(f'Turn: {turns} Score: {score}')
+    print(f'Turns: {turns}')
+    return turns
+
+def world_championship(games, goal_1, goal_2):
+    alexawins = 0
+    siriwins = 0
+    for i in range(games):
+        siri = 0
+        alexa = 0
+        while siri < 100 and alexa < 100:
+            alexa = computer_turn(alexa, goal_1)
+            siri = computer_turn(siri, goal_2)
+        if alexa > siri:
+            alexawins += 1
+        else:
+            siriwins += 1
+    print(f'Alexa: {alexa} Siri: {siri}')
+    print(f'Alexa: {alexawins} wins Siri: {siriwins} wins')
+    return alexawins, siriwins
+
+
+def validate_response(prompt, response_1, response_2):
+    response = input(prompt)
+    while response_1 != response and response_2 != response:
+        response = input(prompt)
+    return response
+
+
+if __name__ == '__main__':
+    #validate_response('are you happy', 'y', 'n')
+
+    human_vs_computer()
+    #neg numbers see what you get
